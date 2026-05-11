@@ -1,6 +1,7 @@
 import { auth } from "./auth";
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5400/api";
+export const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5400/api";
 
 export type Todo = { id: string; name: string; checked: boolean };
 export type User = { id: string; username: string };
@@ -13,7 +14,10 @@ export type ApiResult<T> = {
   error: string | null;
 };
 
-async function request<T>(path: string, init?: RequestInit): Promise<ApiResult<T>> {
+async function request<T>(
+  path: string,
+  init?: RequestInit,
+): Promise<ApiResult<T>> {
   try {
     const token = auth.getToken();
     const res = await fetch(`${API_BASE}${path}`, {
@@ -72,5 +76,6 @@ export const api = {
       method: "PUT",
       body: JSON.stringify(body),
     }),
-  deleteTodo: (id: string) => request<Todo>(`/todos/${id}`, { method: "DELETE" }),
+  deleteTodo: (id: string) =>
+    request<Todo>(`/todos/${id}`, { method: "DELETE" }),
 };

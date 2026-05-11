@@ -61,7 +61,9 @@ export default function LoginPage() {
         >
           {loading ? "..." : "Login"}
         </button>
-        {status && <p className="text-sm text-red-600 dark:text-red-400">{status}</p>}
+        {status && (
+          <p className="text-sm text-red-600 dark:text-red-400">{status}</p>
+        )}
         <p className="text-sm text-zinc-500">
           No account?{" "}
           <Link href="/register" className="underline">
