@@ -23,7 +23,7 @@ export default function TodosPage() {
       }
       return false;
     },
-    [router]
+    [router],
   );
 
   const refresh = useCallback(async () => {
@@ -63,10 +63,10 @@ export default function TodosPage() {
   }
 
   async function onToggle(t: Todo) {
-    const res = await api.updateTodo(t.id, { checked: !t.checked });
+    const res = await api.updateTodo(t._id, { checked: !t.checked });
     if (handleAuthError(res)) return;
     setStatus(
-      `PUT /todos/${t.id} {checked} → ${res.status}${res.error ? ` ${res.error}` : ""}`
+      `PUT /todos/${t._id} {checked} → ${res.status}${res.error ? ` ${res.error}` : ""}`,
     );
     refresh();
   }
@@ -74,7 +74,9 @@ export default function TodosPage() {
   async function onSaveEdit(id: string) {
     const res = await api.updateTodo(id, { name: editingName.trim() });
     if (handleAuthError(res)) return;
-    setStatus(`PUT /todos/${id} {name} → ${res.status}${res.error ? ` ${res.error}` : ""}`);
+    setStatus(
+      `PUT /todos/${id} {name} → ${res.status}${res.error ? ` ${res.error}` : ""}`,
+    );
     setEditingId(null);
     setEditingName("");
     refresh();
@@ -83,7 +85,9 @@ export default function TodosPage() {
   async function onDelete(id: string) {
     const res = await api.deleteTodo(id);
     if (handleAuthError(res)) return;
-    setStatus(`DELETE /todos/${id} → ${res.status}${res.error ? ` ${res.error}` : ""}`);
+    setStatus(
+      `DELETE /todos/${id} → ${res.status}${res.error ? ` ${res.error}` : ""}`,
+    );
     refresh();
   }
 
@@ -134,11 +138,15 @@ export default function TodosPage() {
       <ul className="space-y-2">
         {todos.map((t) => (
           <li
-            key={t.id}
+            key={t._id}
             className="flex items-center gap-3 rounded-md border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900"
           >
-            <input type="checkbox" checked={t.checked} onChange={() => onToggle(t)} />
-            {editingId === t.id ? (
+            <input
+              type="checkbox"
+              checked={t.checked}
+              onChange={() => onToggle(t)}
+            />
+            {editingId === t._id ? (
               <>
                 <input
                   className="flex-1 rounded-md border border-zinc-300 bg-transparent px-2 py-1 text-sm dark:border-zinc-700"
@@ -146,7 +154,10 @@ export default function TodosPage() {
                   onChange={(e) => setEditingName(e.target.value)}
                   autoFocus
                 />
-                <button onClick={() => onSaveEdit(t.id)} className="text-sm text-emerald-600">
+                <button
+                  onClick={() => onSaveEdit(t._id)}
+                  className="text-sm text-emerald-600"
+                >
                   Save
                 </button>
                 <button
@@ -161,26 +172,33 @@ export default function TodosPage() {
               </>
             ) : (
               <>
-                <span className={`flex-1 text-sm ${t.checked ? "line-through text-zinc-400" : ""}`}>
+                <span
+                  className={`flex-1 text-sm ${t.checked ? "line-through text-zinc-400" : ""}`}
+                >
                   {t.name}
                 </span>
                 <button
                   onClick={() => {
-                    setEditingId(t.id);
+                    setEditingId(t._id);
                     setEditingName(t.name);
                   }}
                   className="text-sm text-zinc-500"
                 >
                   Edit
                 </button>
-                <button onClick={() => onDelete(t.id)} className="text-sm text-red-600">
+                <button
+                  onClick={() => onDelete(t._id)}
+                  className="text-sm text-red-600"
+                >
                   Delete
                 </button>
               </>
             )}
           </li>
         ))}
-        {todos.length === 0 && <li className="text-sm text-zinc-500">No todos yet.</li>}
+        {todos.length === 0 && (
+          <li className="text-sm text-zinc-500">No todos yet.</li>
+        )}
       </ul>
     </main>
   );
